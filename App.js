@@ -1,47 +1,23 @@
-const express = require('express')
-var https = require('https')
+const express = require('express');
+const mongoose = require('mongoose');
 
+const app = express();
 
-var fs = require('fs')
+app.use(express.json());
 
+app.listen(3000, () => {
+    console.log(`Server Started at ${3000}`)
+})
 
-const MongoClient = require('mongodb').MongoClient
+const mongoString = 'mongodb+srv://userReadOnly:7ZT817O8ejDfhnBM@minichallenge.q4nve1r.mongodb.net/'
 
+mongoose.connect(mongoString);
+const database = mongoose.connection
 
-const app = express()
+database.on('error', (error) => {
+    console.log(error)
+})
 
-
-const port = 3000
-
-
-app.get('/', (req, res) => res.send('Message from Express route handler: Hello World!'))
-
-
-var db;
-
-
-MongoClient.connect('mongodb+srv://userReadOnly:7ZT817O8ejDfhnBM@minichallenge.q4nve1r.mongodb.net/', (err, client) => {
-
-
-    if (err) return console.log(err)
-
-
-    db = client.db('minichallenge') 
-
-
-    https.createServer({
-
-
-        key: fs.readFileSync('/Users/kanghao/Applications/server.key'),
-
-
-        cert: fs.readFileSync('/Users/kanghao/Applications/server.cert')
-
-
-    }, app)
-
-
-        .listen(port, () => console.log(`Example app listening on port ${port}!`))
-
-
+database.once('connected', () => {
+    console.log('Database Connected');
 })
