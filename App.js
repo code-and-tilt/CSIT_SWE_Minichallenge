@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const routes = require('./routes/routes');
+require('dotenv').config();
 
 const app = express();
 
@@ -10,7 +11,7 @@ app.listen(8080, () => {
     console.log(`Server Started at ${8080}`)
 })
 
-const mongoString = 'mongodb+srv://userReadOnly:7ZT817O8ejDfhnBM@minichallenge.q4nve1r.mongodb.net/minichallenge'
+const mongoString = process.env.DATABASE_URL
 mongoose.connect(mongoString);
 const database = mongoose.connection
 
