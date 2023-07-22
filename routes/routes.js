@@ -6,7 +6,7 @@ const router = express.Router()
 
 module.exports = router;
 
-//hotel
+//hotel API
 router.get('/hotel', async (req, res) => {
   try {
     const checkInDate = new Date(req.query.checkInDate);
@@ -62,25 +62,17 @@ router.get('/flight', async (req, res) => {
     const returnDate = new Date(req.query.returnDate);
     const destination = req.query.destination;
 
-    const result = await flightsModel.aggregate([
+    const departureResult = await flightsModel.aggregate([
       {
         $match: {
           destcity: destination,
-          date: {
-            $gte: departureDate,
-            $lte: returnDate,
-          },
-        },
-      },
-      {
-        $group: {
-          _id: "$airlinename",
-          totalPrice: { $sum: "$price" },
+          srccity: "Singapore",
+          date: departureDate,
         },
       },
       {
         $sort: {
-          totalPrice: 1,
+          price: 1,
         },
       },
       {
@@ -88,17 +80,37 @@ router.get('/flight', async (req, res) => {
       },
     ]);
 
-    const flight = result[0];
+    const returnResult = await flightsModel.aggregate([
+      {
+        $match: {
+          destcity: "Singapore",
+          srccity: destination,
+          date: returnDate,
+        },
+      },
+      {
+        $sort: {
+          price: 1,
+        },
+      },
+      {
+        $limit: 1,
+      },
+    ]);
+
+    const departureFlight = departureResult[0];
+    const returnFlight = returnResult[0];
     const response = {
       City: destination,
       "Departure Date": departureDate.toISOString().slice(0, 10),
+      "Departure Airline": departureFlight.airlinename,
+      "Departure Price": departureFlight.price,
       "Return Date": returnDate.toISOString().slice(0, 10),
-      "Airline Name": flight._id,
-      Price: flight.totalPrice,
+      "Return Airline": returnFlight.airlinename,
+      "Return Price": returnFlight.price,
     };
 
     res.json(response);
-    res.json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
