@@ -10,7 +10,7 @@ app.listen(3000, () => {
     console.log(`Server Started at ${3000}`)
 })
 
-const mongoString = 'mongodb+srv://userReadOnly:7ZT817O8ejDfhnBM@minichallenge.q4nve1r.mongodb.net/'
+const mongoString = 'mongodb+srv://userReadOnly:7ZT817O8ejDfhnBM@minichallenge.q4nve1r.mongodb.net/minichallenge'
 mongoose.connect(mongoString);
 const database = mongoose.connection
 

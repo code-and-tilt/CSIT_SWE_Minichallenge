@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
 
 const flightsSchema = new mongoose.Schema({
+    _id : {
+        required: true,
+        type: Number
+    },
     airline: {
         required: true,
         type: String
     },
-    airlineID: {
+    airlineid: {
         required: true,
         type: Number
     },
@@ -13,7 +17,7 @@ const flightsSchema = new mongoose.Schema({
         required: true,
         type: String
     },
-    srcairportID: {
+    srcairportid: {
         required: true,
         type: Number
     },
@@ -21,11 +25,11 @@ const flightsSchema = new mongoose.Schema({
         required: true,
         type: String
     },
-    destairportID: {
+    destairportid: {
         required: true,
         type: Number
     },
-    codeShare: {    
+    codeshare: {    
         required: true,
         type: String
     },
@@ -37,31 +41,31 @@ const flightsSchema = new mongoose.Schema({
         required: true,
         type: String
     },
-    airlineName: {
+    airlinename: {
         required: true,
         type: String
     },
-    srcAirportName: {
+    srcairportname: {
         required: true,
         type: String
     },
-    srcCity: {
+    srccity: {
         required: true,
         type: String
     },
-    srcCountry: {
+    srccountry: {
         required: true,
         type: String
     },
-    destAirportName: {
+    destairportname: {
         required: true,
         type: String
     },
-    destCity: {
+    destcity: {
         required: true,
         type: String
     },
-    destCountry: {
+    destcountry: {
         required: true,
         type: String
     },
