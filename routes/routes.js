@@ -13,6 +13,20 @@ router.get('/hotel', async (req, res) => {
     const checkOutDate = new Date(req.query.checkOutDate);
     const destination = req.query.destination;
 
+    const dateCursor = new Date(checkInDate);
+    while (dateCursor <= checkOutDate) {
+      const hotelAvailability = await hotelModel.findOne({
+        city: destination,
+        date: dateCursor,
+      });
+
+      if (!hotelAvailability) {
+        return res.status(400).json({ message: "Hotel is not available on " + dateCursor.toISOString().slice(0, 10) });
+      }
+
+      dateCursor.setDate(dateCursor.getDate() + 1);
+    }
+
     const result = await hotelModel.aggregate([
       {
         $match: {
