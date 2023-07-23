@@ -13,6 +13,14 @@ router.get('/hotel', async (req, res) => {
     const checkOutDate = new Date(req.query.checkOutDate);
     const destination = req.query.destination;
 
+    const destinationExist = await hotelModel.findOne({
+      city: destination,
+    });
+
+    if(!destinationExist){
+      return res.json([]);
+    }
+
     const dateCursor = new Date(checkInDate);
     while (dateCursor <= checkOutDate) {
       const hotelAvailability = await hotelModel.findOne({
@@ -54,13 +62,13 @@ router.get('/hotel', async (req, res) => {
     ]);
 
     const hotel = result[0];
-    const response = {
+    const response = [{
       City: destination,
       "Check In Date": checkInDate.toISOString().slice(0, 10),
       "Check Out Date": checkOutDate.toISOString().slice(0, 10),
       Hotel: hotel._id,
       Price: hotel.totalPrice,
-    };
+    }];
 
     res.json(response);
   } catch (error) {
@@ -75,9 +83,17 @@ router.get('/flight', async (req, res) => {
     const departureDate = new Date(req.query.departureDate);
     const returnDate = new Date(req.query.returnDate);
     const destination = req.query.destination;
-    // Check if destination is missing
-    if (destination == undefined) {
-      return res.status(400).json({ message: "Invalid input." });
+
+    const destinationExist = await flightsModel.findOne({
+      destcity: destination,
+    });
+
+    const destinationExist2 = await flightsModel.findOne({
+      srccity: destination,
+    });
+
+    if(!destinationExist && !destinationExist2){
+      return res.json([]);
     }
     
     const departureResult = await flightsModel.aggregate([
@@ -118,16 +134,16 @@ router.get('/flight', async (req, res) => {
 
     const departureFlight = departureResult[0];
     const returnFlight = returnResult[0];
-    
-    const response = {
-      "City": destination,
+
+    const response = [{
+      City: destination,
       "Departure Date": departureDate.toISOString().slice(0, 10),
       "Departure Airline": departureFlight.airlinename,
       "Departure Price": departureFlight.price,
       "Return Date": returnDate.toISOString().slice(0, 10),
       "Return Airline": returnFlight.airlinename,
       "Return Price": returnFlight.price,
-    };
+    }];
 
     res.json(response);
   } catch (error) {
