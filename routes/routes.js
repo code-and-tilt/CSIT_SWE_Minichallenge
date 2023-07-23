@@ -75,7 +75,11 @@ router.get('/flight', async (req, res) => {
     const departureDate = new Date(req.query.departureDate);
     const returnDate = new Date(req.query.returnDate);
     const destination = req.query.destination;
-
+    // Check if destination is missing
+    if (destination == undefined) {
+      return res.status(400).json({ message: "Invalid input." });
+    }
+    
     const departureResult = await flightsModel.aggregate([
       {
         $match: {
@@ -114,8 +118,9 @@ router.get('/flight', async (req, res) => {
 
     const departureFlight = departureResult[0];
     const returnFlight = returnResult[0];
+    
     const response = {
-      City: destination,
+      "City": destination,
       "Departure Date": departureDate.toISOString().slice(0, 10),
       "Departure Airline": departureFlight.airlinename,
       "Departure Price": departureFlight.price,
