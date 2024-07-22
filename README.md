@@ -12,3 +12,7 @@ Frameworks and technologies used:
 Links:
 - Mongoose documentation for aggregration: https://mongoosejs.com/docs/api/aggregate.html
 - Docker build image & container documentation: https://docs.docker.com/get-started/
+
+Completion Badge:
+
+![Completion Badge](/CSIT-SWE%20Badge.jfif)
